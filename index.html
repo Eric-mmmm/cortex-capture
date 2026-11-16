@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1115">
+  <title>Cortex capture</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Only one <section class="screen"> is visible at a time (app.js toggles [hidden]). -->
+
+  <!-- HOME -->
+  <section class="screen" id="screen-home">
+    <header class="bar">
+      <h1>Cortex</h1>
+      <span id="queue-badge" class="badge" hidden></span>
+      <button class="icon-btn" id="send-now" type="button" hidden>Send now</button>
+      <button class="icon-btn" id="open-settings" type="button" aria-label="Settings">Settings</button>
+    </header>
+
+    <div class="big-grid">
+      <button class="big" data-go="speak" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        Speak
+      </button>
+      <button class="big" data-go="type" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>
+        Type
+      </button>
+      <button class="big" data-go="photo" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Photo
+      </button>
+      <button class="big" data-go="log" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Log time
+      </button>
+    </div>
+
+    <div class="home-lower">
+      <p class="label">Tags (tap to toggle, stay on until you turn them off)</p>
+      <div id="chips" class="chips"></div>
+      <p class="label">Last captures</p>
+      <ul id="recent" class="recent"></ul>
+    </div>
+  </section>
+
+  <!-- SPEAK -->
+  <section class="screen" id="screen-speak" hidden>
+    <header class="bar"><button class="back" data-go="home" type="button">Back</button><h1>Speak</h1></header>
+    <div class="body">
+      <div class="tabs" role="tablist">
+        <button id="tab-dictate" role="tab" type="button" aria-selected="true">Dictate</button>
+        <button id="tab-record" role="tab" type="button" aria-selected="false">Record</button>
+      </div>
+      <p class="hint">For long lectures use the Pixel Recorder app, then share the transcript here.</p>
+
+      <div id="pane-dictate">
+        <div id="lang-toggle" class="seg"></div>
+        <button id="dictate-toggle" class="primary" type="button">Start dictating</button>
+        <p id="dictate-status" class="status" role="status"></p>
+        <textarea id="dictate-text" rows="7" placeholder="Your words appear here. You can edit them."></textarea>
+        <button id="dictate-save" class="save" type="button">Save</button>
+      </div>
+      <p id="dictate-missing" class="note" hidden></p>
+
+      <div id="pane-record" hidden>
+        <button id="record-toggle" class="primary" type="button">Start recording</button>
+        <p id="record-status" class="status" role="status"></p>
+        <audio id="record-preview" controls hidden></audio>
+        <button id="record-save" class="save" type="button" disabled>Save recording</button>
+      </div>
+      <p id="record-missing" class="note" hidden></p>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section class="screen" id="screen-type" hidden>
+    <header class="bar"><button class="back" data-go="home" type="button">Back</button><h1>Type</h1></header>
+    <div class="body grow">
+      <textarea id="type-text" class="tall" placeholder="Write a note"></textarea>
+      <button id="type-save" class="save" type="button">Save</button>
+    </div>
+  </section>
+
+  <!-- PHOTO -->
+  <section class="screen" id="screen-photo" hidden>
+    <header class="bar"><button class="back" data-go="home" type="button">Back</button><h1>Photo</h1></header>
+    <div class="body">
+      <label class="primary file-btn">Take or choose a photo
+        <input id="photo-input" type="file" accept="image/*" capture="environment">
+      </label>
+      <img id="photo-preview" alt="Preview of the photo" hidden>
+      <input id="photo-caption" type="text" placeholder="Caption (optional)" autocomplete="off">
+      <p id="photo-status" class="status" role="status"></p>
+      <button id="photo-save" class="save" type="button" disabled>Save</button>
+    </div>
+  </section>
+
+  <!-- LOG TIME -->
+  <section class="screen" id="screen-log" hidden>
+    <header class="bar"><button class="back" data-go="home" type="button">Back</button><h1>Log time</h1></header>
+    <div class="body">
+      <p class="label">Hours</p>
+      <div class="stepper">
+        <button id="hours-down" type="button" aria-label="Fewer hours">&minus;</button>
+        <output id="hours-value">1</output>
+        <button id="hours-up" type="button" aria-label="More hours">+</button>
+      </div>
+      <p class="label">Spent on (required)</p>
+      <div id="log-tags" class="chips"></div>
+      <label class="switch"><input id="log-deep" type="checkbox" checked> Deep work</label>
+      <p id="log-preview" class="status"></p>
+      <button id="log-save" class="save" type="button" disabled>Save</button>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="screen" id="screen-settings" hidden>
+    <header class="bar"><button class="back" data-go="home" type="button">Back</button><h1>Settings</h1></header>
+    <div class="body">
+      <label class="label" for="set-url">Apps Script web app URL</label>
+      <input id="set-url" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label class="label" for="set-token">Token</label>
+      <input id="set-token" type="password" placeholder="your long secret" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button id="set-test" class="primary" type="button">Test connection</button>
+      <p id="set-status" class="status" role="status"></p>
+      <label class="label" for="set-langs">Dictation languages (first is the default)</label>
+      <input id="set-langs" type="text" placeholder="fr-CA, en-CA" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <label class="label" for="set-tags">Tags (commas or one per line)</label>
+      <textarea id="set-tags" rows="4" spellcheck="false"></textarea>
+      <button id="set-save" class="save" type="button">Save settings</button>
+    </div>
+  </section>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

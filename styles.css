@@ -1,0 +1,87 @@
+/* styles.css - dark, calm, high contrast, thumb friendly. No external fonts. */
+:root {
+  --bg: #0f1115;
+  --panel: #1a1e26;
+  --panel-2: #232935;
+  --text: #f2f4f8;
+  --muted: #a9b2c3;
+  --accent: #7cc4ff;
+  --accent-ink: #06121d;
+  --ok: #7fe0a0;
+  --bad: #ff8d8d;
+  --warn: #ffd37a;
+  --radius: 18px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); overflow-x: hidden; }
+body { font-size: 18px; line-height: 1.35; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+
+/* Each screen fills the viewport; the home screen is a column so the big buttons can stretch. */
+.screen { display: flex; flex-direction: column; min-height: 100dvh; padding: 0 16px calc(12px + env(safe-area-inset-bottom)); }
+#screen-home { height: 100dvh; min-height: 0; }
+
+.bar { display: flex; align-items: center; gap: 10px; min-height: 56px; padding-top: env(safe-area-inset-top); }
+.bar h1 { margin: 0; font-size: 22px; flex: 1; }
+.back, .icon-btn { background: var(--panel); color: var(--text); border: 0; border-radius: 12px; min-height: 44px; padding: 0 14px; font-size: 16px; }
+.bar .back + h1 { text-align: left; }
+.badge { background: var(--warn); color: #231a00; border-radius: 999px; padding: 4px 12px; font-weight: 700; font-size: 15px; }
+
+/* The four big buttons take all spare height. */
+.big-grid { flex: 1 1 auto; min-height: 220px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; }
+.big { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--panel); color: var(--text); border: 2px solid var(--panel-2); border-radius: var(--radius); font-size: 26px; font-weight: 700; }
+.big:active { background: var(--panel-2); border-color: var(--accent); }
+.big svg { width: 52px; height: 52px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.home-lower { flex: 0 0 auto; padding-top: 4px; }
+.label { margin: 10px 0 6px; color: var(--muted); font-size: 14px; letter-spacing: .02em; display: block; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--panel-2); background: var(--panel); color: var(--text); font-size: 16px; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+
+.recent { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.recent li { display: flex; align-items: center; gap: 10px; background: var(--panel); border-radius: 12px; padding: 8px 12px; min-height: 48px; }
+.recent .what { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; }
+.recent .err { display: block; color: var(--bad); font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
+.pill { flex: none; border-radius: 999px; padding: 3px 10px; font-size: 13px; font-weight: 700; background: var(--panel-2); }
+.pill.sent { color: var(--ok); }
+.pill.failed { color: var(--bad); }
+.pill.queued, .pill.sending { color: var(--warn); }
+.empty { color: var(--muted); font-size: 15px; padding: 8px 2px; }
+
+/* Sub screens */
+.body { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+.body.grow { flex: 1; }
+.tall { flex: 1; min-height: 40vh; }
+textarea, input[type="text"], input[type="url"], input[type="password"] {
+  width: 100%; background: var(--panel); color: var(--text); border: 2px solid var(--panel-2); border-radius: 14px; padding: 12px 14px; font: inherit; font-size: 18px;
+}
+textarea:focus, input:focus { outline: 0; border-color: var(--accent); }
+.primary, .save { min-height: 60px; border: 0; border-radius: var(--radius); font-size: 20px; font-weight: 700; width: 100%; }
+.primary { background: var(--panel-2); color: var(--text); border: 2px solid var(--accent); }
+.save { background: var(--accent); color: var(--accent-ink); }
+.save:disabled, .primary:disabled { opacity: .4; }
+.primary.active { background: var(--bad); color: #2a0000; border-color: var(--bad); }
+.file-btn { display: flex; align-items: center; justify-content: center; text-align: center; }
+.file-btn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.tabs, .seg { display: flex; gap: 8px; }
+.tabs button, .seg button { flex: 1; min-height: 48px; border-radius: 12px; border: 2px solid var(--panel-2); background: var(--panel); color: var(--text); font-size: 17px; }
+.tabs button[aria-selected="true"], .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.hint, .note { margin: 0; color: var(--muted); font-size: 15px; }
+.status { margin: 0; min-height: 1.3em; color: var(--muted); font-size: 16px; }
+.status.ok { color: var(--ok); } .status.bad { color: var(--bad); } .status.warn { color: var(--warn); }
+#photo-preview { width: 100%; max-height: 38vh; object-fit: contain; border-radius: 14px; background: #000; }
+audio { width: 100%; }
+
+.stepper { display: flex; align-items: center; gap: 12px; }
+.stepper button { width: 72px; height: 72px; border-radius: var(--radius); border: 2px solid var(--panel-2); background: var(--panel); color: var(--text); font-size: 34px; }
+.stepper output { flex: 1; text-align: center; font-size: 40px; font-weight: 700; }
+.switch { display: flex; align-items: center; gap: 12px; min-height: 52px; font-size: 18px; }
+.switch input { width: 28px; height: 28px; accent-color: var(--accent); }
+
+.toast { position: fixed; left: 16px; right: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); background: var(--text); color: var(--bg); padding: 14px 16px; border-radius: 14px; font-weight: 700; text-align: center; z-index: 10; pointer-events: none; }
+
+@media (max-height: 700px) { .big { font-size: 22px; } .big svg { width: 40px; height: 40px; } }
+#pane-dictate, #pane-record { display: flex; flex-direction: column; gap: 12px; }
